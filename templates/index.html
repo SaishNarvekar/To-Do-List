@@ -7,7 +7,7 @@
     <p class="lead text-center">Simple To Do List Created in Python Using Flasks Framework.</p>
     <p class="lead text-center"><a href="/add">Click Here</a> To make you own list</p>
     {% if data|length > 0 %}
-    <ul>
+    <ul style="margin:auto; width:250px;">
         {% for i in data%}
         <li>{{i[1]}}</li>
         {%endfor%}  

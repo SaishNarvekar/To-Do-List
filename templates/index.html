@@ -1,0 +1,21 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+
+<div class="container">
+    <h1 class="mt-5 text-center">To-Do List</h1>
+    <p class="lead text-center">Simple To Do List Created in Python Using Flasks Framework.</p>
+    <p class="lead text-center"><a href="/add">Click Here</a> To make you own list</p>
+    {% if data|length > 0 %}
+    <ul>
+        {% for i in data%}
+        <li>{{i[1]}}</li>
+        {%endfor%}  
+    </ul>
+    {% else %}
+        <h4 class="text-center">List is empty</h4>
+    {% endif %}
+</div>
+
+
+{% endblock %}

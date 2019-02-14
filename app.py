@@ -38,11 +38,14 @@ def update():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        session['username'] = request.form['username']
-        return redirect(url_for('index'))
+        username = request.form['username']
+        hashed_password = hashlib.sha512(request.form['password'].encode('utf-8')).hexdigest()
+        return auth_user(username,hashed_password)
+
     if "username" in session:
         return redirect(url_for('index'))
-    return render_template('login.html')
+
+    return render_template('login.html',error=False)
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -64,9 +67,31 @@ def register():
 def logout():
     # remove the username from the session if it is there
     session.pop('username', None)
-    session.pop('id', None)
     return redirect(url_for('index'))
 
+
+
+def auth_user(username,hashed_password):
+    sqlConn = con()
+    cur = sqlConn.cursor(buffered=True)
+    sqlQuery = "SELECT hashed_password from users where username = \"{}\";".format(username)
+    cur.execute(sqlQuery)
+    
+    print(cur.rowcount)
+    print(hashed_password)
+
+    if cur.rowcount == 0:
+        print("Wrong Info")
+        return render_template('login.html',error=True)
+
+    for i in cur.fetchone():
+        if i == hashed_password:
+            print("Valid")
+            session['username'] = username
+            return redirect(url_for('index'))
+        else:
+            print("Wrong Password")
+            return render_template('login.html',error=True)
 
 if(__name__ == '__main__'):
     app.run(debug=True)

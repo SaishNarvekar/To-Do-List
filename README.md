@@ -7,9 +7,10 @@ Release : 0.0.1v
 ### Features 
 
 - [✔] User Registration
-- [✔] User Login 
-- [❌] Private List - Future Release
-- [❌] User Management/Profile - Future Release
+- [✔] User Login
+- [❌] Private List
+- [❌] User Management/Profile
+- [❌] Dockerize app
 
 ### How To Install:
 

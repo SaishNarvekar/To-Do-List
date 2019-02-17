@@ -5,18 +5,20 @@
 {% if registered == True %}
 
 <div class="alert alert-success">
-        <strong>Success!</strong> Indicates a successful or positive action.
+    <strong>Success!</strong> Registered Successfully <a href="/login">Click Here</a>To Login In.
 </div>
 
 {% endif %}
 
 <div class="container text-center" style="margin-top: 50px;">
     <form action="" method="POST">
+        <p>Email</p>
+        <p><input type="text" name="email" /></p>
         <p>Username</p>
         <p><input type="text" name="username" /></p>
         <p>Password</p>
-        <p><input type="password" name="password"/></p>
-        <p><input type="submit" value="Register" /></p>
+        <p><input type="password" name="password" /></p>
+        <p><input class="btn btn-outline-primary" type="submit" value="Register" /></p>
     </form>
 </div>
 

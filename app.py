@@ -50,14 +50,17 @@ def login():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    if "username" in session:
+        return redirect(url_for('index'))
     if request.method == 'GET':
-        return render_template('register.html')
+        return render_template('register.html',registered = False)
     if request.method == 'POST':
+        email = request.form['email']
         userName = request.form['username']
         hashPassWord = hashlib.sha512(request.form['password'].encode('utf-8')).hexdigest()
         sqlConn = con()
         cur = sqlConn.cursor()
-        sqlQuery = "Insert Into users(username,hashed_password) VALUES (\"{}\",\"{}\");".format(userName,hashPassWord)
+        sqlQuery = "Insert Into users(email,username,hashed_password) VALUES (\"{}\",\"{}\",\"{}\");".format(email,userName,hashPassWord)
         cur.execute(sqlQuery)
         sqlConn.commit()
         return render_template('register.html',registered = True)
@@ -65,11 +68,12 @@ def register():
 
 @app.route('/logout')
 def logout():
-    # remove the username from the session if it is there
     session.pop('username', None)
     return redirect(url_for('index'))
 
-
+@app.errorhandler(404)
+def notFound(error):
+    return "404 Page"
 
 def auth_user(username,hashed_password):
     sqlConn = con()
@@ -77,8 +81,8 @@ def auth_user(username,hashed_password):
     sqlQuery = "SELECT hashed_password from users where username = \"{}\";".format(username)
     cur.execute(sqlQuery)
     
-    print(cur.rowcount)
-    print(hashed_password)
+    # print(cur.rowcount)
+    # print(hashed_password)
 
     if cur.rowcount == 0:
         print("Wrong Info")

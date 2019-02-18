@@ -15,9 +15,11 @@ Release : 0.0.1v
 
 - [❌] Dockerize app
 - [❌] Design Logo And 404 Page
+- [❌] Form Validation
+- [❌] Post-Form Validation
 
 ### How To Install:
 
 #### Requirement
-1. Python (3.6+)
+1. Python (3.7+)
 2. MySql Database

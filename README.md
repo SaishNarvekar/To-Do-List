@@ -10,6 +10,9 @@ Release : 0.0.1v
 - [✔] User Login
 - [❌] Private List
 - [❌] User Management/Profile
+
+### Things To Do
+
 - [❌] Dockerize app
 
 ### How To Install:

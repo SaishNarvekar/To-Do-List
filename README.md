@@ -14,6 +14,7 @@ Release : 0.0.1v
 ### Things To Do
 
 - [❌] Dockerize app
+- [❌] Design Logo And 404 Page
 
 ### How To Install:
 

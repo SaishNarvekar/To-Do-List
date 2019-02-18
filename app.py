@@ -81,9 +81,6 @@ def auth_user(username,hashed_password):
     sqlQuery = "SELECT hashed_password from users where username = \"{}\";".format(username)
     cur.execute(sqlQuery)
     
-    # print(cur.rowcount)
-    # print(hashed_password)
-
     if cur.rowcount == 0:
         print("Wrong Info")
         return render_template('login.html',error=True)

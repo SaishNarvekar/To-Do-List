@@ -17,6 +17,7 @@ Release : 0.0.1v
 - [❌] Design Logo And 404 Page
 - [❌] Form Validation
 - [❌] Post-Form Validation
+- [❌] Proper Session Handling [Ref.](https://machinesaredigging.com/2013/10/29/how-does-a-web-session-work)
 
 ### How To Install:
 

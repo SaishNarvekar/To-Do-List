@@ -3,6 +3,9 @@
 {% block body %}
 
     <h1 class="mt-5 text-center">To-Do List</h1>
+    <div class="text-center" style="margin-bottom: .5rem;">
+        <img src="{{url_for('static',filename='images/logo.svg')}}" alt="" class="">
+    </div>
     <p class="lead text-center">Simple To Do List Created in Python Using Flasks Framework.</p>
     <p class="lead text-center"><a href="/login">Click Here</a> To make you own list</p>
     {% if data|length > 0 %}
@@ -15,6 +18,6 @@
         <h4 class="text-center">List is empty</h4>
     {% endif %}
 
-{{session['username']}}
+{{session['uuid']}}
 
 {% endblock %}

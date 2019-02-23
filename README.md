@@ -11,14 +11,6 @@ Release : 0.0.1v
 - [❌] Private List
 - [❌] User Management/Profile
 
-### Things To Do
-
-- [❌] Dockerize app
-- [❌] Design Logo And 404 Page
-- [❌] Form Validation
-- [❌] Post-Form Validation
-- [❌] Proper Session Handling [Ref.](https://machinesaredigging.com/2013/10/29/how-does-a-web-session-work)
-
 ### How To Install:
 
 #### Requirement

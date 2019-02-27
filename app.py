@@ -17,6 +17,7 @@ def make_session_permanent():
 
 @app.route("/")
 def index():
+    # print(request.remote_addr)
     data = get_DataBase_Results("select * from itemlist")
     if "uuid" in session:
         update_timestamp()
@@ -80,9 +81,13 @@ def logout():
     session.pop('uuid', None)
     return redirect(url_for('index'))
 
+@app.route('/error/<code>')
+def error(code):
+    return render_template('error.html',code = code)
+
 @app.errorhandler(404)
 def notFound(error):
-    return "404 Page"
+    return redirect('/error/{}'.format(404))
 
 def auth_user(username,hashed_password):
     sqlConn = con()

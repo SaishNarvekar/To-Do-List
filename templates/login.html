@@ -13,11 +13,16 @@
 <div class="container text-center" style="margin-top: 50px;">
     <form action="/login" method="POST">
         <p>Username</p>
-        <p><input type="text" name="username" /></p>
+        <p><input id="username" type="text" name="username" autocomplete="off"/></p>
+        <p id='username-error' class = "alert alert-danger" style="display:none">
+            <strong>Error!</strong> Wrong Information / Password.
+        </p>
         <p>Password</p>
-        <p><input type="password" name="password" /></p>
-        <p><input class ="btn btn-outline-primary" type="submit" value="Login" /></p>
+        <p><input id="password" type="password" name="password" /></p>
+        <p><input id="submit" class ="btn btn-outline-primary" type="submit" value="Login" /></p>
     </form>
 </div>
+
+<script src="{{ url_for('static',filename = 'js/login.js')}}"></script>
 
 {% endblock %}

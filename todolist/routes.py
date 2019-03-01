@@ -1,8 +1,7 @@
 from todolist import app
 from flask import session, request, render_template, redirect,url_for
 import datetime,time,uuid,hashlib
-from todolist.dbconnection import con
-from todolist.query import get_DataBase_Results, insert_DataBase_Results
+from todolist.connection import con,retrive, insert
 
 @app.before_request
 def make_session_permanent():
@@ -14,30 +13,17 @@ def make_session_permanent():
 
 @app.route("/")
 def index():
-    # print(request.remote_addr)
-    # data = get_DataBase_Results("select * from itemlist")
+    
     if "uuid" in session:
         update_timestamp()
-        # return render_template("index.html", data=data, session=session)
         return render_template("index.html",session=session)
     else:
-        # return render_template("index.html", data=data)
         return render_template("index.html")
 
 
 @app.route("/private-list")
 def dashboard():
     return render_template("private-list.html")
-
-# @app.route("/update", methods=['POST'])
-# def update():
-
-#     value = request.form['item']
-#     print(value)
-#     sqlQuery = "Insert Into itemlist(item) VALUES (\"{}\");".format(value)
-#     insert_DataBase_Results(sqlQuery)
-#     return redirect(url_for('index'))
-
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -73,13 +59,13 @@ def register():
             request.form['password'].encode('utf-8')).hexdigest()
         sqlQuery = "Insert Into users(email,username,hashed_password) VALUES (\"{}\",\"{}\",\"{}\");".format(
             email, userName, hashPassWord)
-        insert_DataBase_Results(sqlQuery)
+        insert(sqlQuery)
         return render_template('register.html', registered=True)
 
 
 @app.route('/logout')
 def logout():
-    insert_DataBase_Results(
+    insert(
         "delete from session_tracker where uuid = \"{}\"".format(session["uuid"]))
     session.pop('uuid', None)
     return redirect(url_for('index'))
@@ -112,7 +98,7 @@ def auth_user(username, hashed_password):
             print("Valid")
             userID = uuid.uuid4()
             session['uuid'] = userID
-            insert_DataBase_Results(
+            insert(
                 "insert into session_tracker (uuid,username) values (\"{}\" ,\"{}\")".format(userID, username))
             expires_timestamp()
             return redirect(url_for('index'))
@@ -125,16 +111,15 @@ def update_timestamp():
     currentTimestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     sqlQuery = "Update session_tracker set updated_at =\"{}\"".format(
         currentTimestamp)
-    insert_DataBase_Results(sqlQuery)
+    insert(sqlQuery)
     expires_timestamp()
 
 
 def expires_timestamp():
     expireTimestamp = (datetime.datetime.now(
     ) + datetime.timedelta(minutes=15)).strftime('%Y-%m-%d %H:%M:%S')
-    sqlQuery = "Update session_tracker set expires_at =\"{}\"".format(
-        expireTimestamp)
-    insert_DataBase_Results(sqlQuery)
+    sqlQuery = "Update session_tracker set expires_at =\"{}\"".format(expireTimestamp)
+    insert(sqlQuery)
     # print(expireTimestamp)
 
 
@@ -142,4 +127,4 @@ def delete_expired_session():
     currentTimestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     sqlQuery = "delete from session_tracker where expires_at <= \"{}\"".format(
         currentTimestamp)
-    insert_DataBase_Results(sqlQuery)
+    insert(sqlQuery)

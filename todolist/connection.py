@@ -1,42 +1,42 @@
 from mysql import connector
 
-# class Connection:
+class Connection:
 
-#     # con = connector.connect(user="bot",password="planner@2019",host="127.0.0.1",database='todolist')
+    def __init__(self):
+        self.con = connector.connect(user="bot",password="planner@2019",host="127.0.0.1",database='todolist')
+        self.cur = self.con.cursor(buffered=True)
 
-#     # def __init__(self):
-#     #     self.con = connector.connect(user="bot",password="planner@2019",host="127.0.0.1",database='todolist')
-
-#     def retrive(self,sqlQuery):
-#         sqlConn = Connection.con
-#         cur = sqlConn.cursor(buffered=True)
-#         cur.execute(sqlQuery)
-#         data = cur.fetchall()
-#         sqlConn.commit()
-#         return data
-
-#     def insert(self,sqlQuery):
-#         sqlConn = Connection.con
-#         cur = sqlConn.cursor(buffered=True)
-#         cur.execute(sqlQuery)
-#         sqlConn.commit()
-#         return cur
-
-def con():
-    return connector.connect(user="bot",password="planner@2019",host="127.0.0.1",database='todolist')
-
-def retrive(sqlQuery):
-    sqlConn = con()
-    cur = sqlConn.cursor(buffered=True)
-    cur.execute(sqlQuery)
-    data = cur.fetchall()
-    sqlConn.commit()
-    return data
-
-def insert(sqlQuery):
-    sqlConn = con()
-    cur = sqlConn.cursor(buffered=True)
-    cur.execute(sqlQuery)
-    sqlConn.commit()
-    return cur
+    def __enter__(self):
+        return self
     
+    def __exit__(self,exc_type,exc_val,exc_tb): 
+        self.commit()
+        self.connection.close()
+
+    @property
+    def connection(self):
+        return self.con
+    
+    @property
+    def cursor(self):
+        return self.cur
+
+    def commit(self):
+        self.connection.commit()
+
+    def execute(self,sql):
+        self.cursor.execute(sql)
+
+    def fetchall(self):
+        return self.cursor.fetchall()
+
+
+    def retrive(self,sql):
+        self.cursor.execute(sql)
+        self.commit()
+        return self.fetchall()
+    
+    def insert(self,sql):
+        self.cursor.execute(sql)
+        self.commit()
+        return self.cursor

@@ -1,0 +1,9 @@
+#Ignore
+.vscode/
+TODOLIST.md
+__pycache__
+todolist/__pycache__
+
+#Dont Ignore
+!.gitignore
+

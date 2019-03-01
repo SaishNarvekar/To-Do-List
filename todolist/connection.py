@@ -32,11 +32,11 @@ class Connection:
 
 
     def retrive(self,sql):
-        self.cursor.execute(sql)
+        self.execute(sql)
         self.commit()
         return self.fetchall()
     
     def insert(self,sql):
-        self.cursor.execute(sql)
+        self.execute(sql)
         self.commit()
         return self.cursor

@@ -1,21 +1,24 @@
 from todolist import app
 from flask import session, request, render_template, redirect,url_for
 import datetime,time,uuid,hashlib
-from todolist.connection import con,retrive, insert
+from todolist.connection import Connection
+from todolist.session import mySession
+
+sqlCon = Connection()
+mySession = mySession()
 
 @app.before_request
 def make_session_permanent():
     session.permanent = True
     app.permanent_session_lifetime = datetime.timedelta(minutes=15)
     session.modified = True
-    delete_expired_session()
-
+    mySession.delete()
 
 @app.route("/")
 def index():
     
     if "uuid" in session:
-        update_timestamp()
+        mySession.update()
         return render_template("index.html",session=session)
     else:
         return render_template("index.html")
@@ -35,8 +38,7 @@ def login():
         return auth_user(username, hashed_password)
 
     if "uuid" in session:
-        update_timestamp()
-        expires_timestamp()
+        mySession.update()
         return redirect(url_for('index'))
 
     return render_template('login.html', error=False)
@@ -46,7 +48,7 @@ def login():
 def register():
 
     if "uuid" in session:
-        update_timestamp()
+        mySession.update()
         return redirect(url_for('index'))
 
     if request.method == 'GET':
@@ -59,13 +61,13 @@ def register():
             request.form['password'].encode('utf-8')).hexdigest()
         sqlQuery = "Insert Into users(email,username,hashed_password) VALUES (\"{}\",\"{}\",\"{}\");".format(
             email, userName, hashPassWord)
-        insert(sqlQuery)
+        sqlCon.insert(sqlQuery)
         return render_template('register.html', registered=True)
 
 
 @app.route('/logout')
 def logout():
-    insert(
+    sqlCon.insert(
         "delete from session_tracker where uuid = \"{}\"".format(session["uuid"]))
     session.pop('uuid', None)
     return redirect(url_for('index'))
@@ -82,13 +84,10 @@ def notFound(error):
 
 def auth_user(username, hashed_password):
     
-    sqlConn = con()
-    cur = sqlConn.cursor(buffered=True)
     sqlQuery = "SELECT hashed_password from users where username = \"{}\";".format(
         username)
-    cur.execute(sqlQuery)
+    cur = sqlCon.insert(sqlQuery)
     
-
     if cur.rowcount == 0:
         print("Wrong Info")
         return render_template('login.html', error=True)
@@ -98,33 +97,10 @@ def auth_user(username, hashed_password):
             print("Valid")
             userID = uuid.uuid4()
             session['uuid'] = userID
-            insert(
+            sqlCon.insert(
                 "insert into session_tracker (uuid,username) values (\"{}\" ,\"{}\")".format(userID, username))
-            expires_timestamp()
+            mySession.update()
             return redirect(url_for('index'))
         else:
             print("Wrong Password")
             return render_template('login.html', error=True)
-
-
-def update_timestamp():
-    currentTimestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    sqlQuery = "Update session_tracker set updated_at =\"{}\"".format(
-        currentTimestamp)
-    insert(sqlQuery)
-    expires_timestamp()
-
-
-def expires_timestamp():
-    expireTimestamp = (datetime.datetime.now(
-    ) + datetime.timedelta(minutes=15)).strftime('%Y-%m-%d %H:%M:%S')
-    sqlQuery = "Update session_tracker set expires_at =\"{}\"".format(expireTimestamp)
-    insert(sqlQuery)
-    # print(expireTimestamp)
-
-
-def delete_expired_session():
-    currentTimestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    sqlQuery = "delete from session_tracker where expires_at <= \"{}\"".format(
-        currentTimestamp)
-    insert(sqlQuery)

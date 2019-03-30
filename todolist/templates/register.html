@@ -1,0 +1,36 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+
+{% if registered == True %}
+
+<div class="alert alert-success">
+    <strong>Success!</strong> Registered Successfully <a href="/login">Click Here</a>To Login In.
+</div>
+
+{% endif %}
+
+<div class="container text-center" style="margin-top: 50px;">
+    <form action="/register" method="POST">
+        <p>Email</p>
+        <p><input id ='email-field' type="text" name="email" autocomplete="off"/></p>
+        <p id='email-error' class = "alert alert-danger" style="display:none">
+            <strong>Error!</strong> Wrong Information / Password.
+        </p>
+        <p>Username</p>
+        <p><input id ='username-field' type="text" name="username" autocomplete="off"/></p>
+        <p id='username-error' class = "alert alert-danger" style="display:none">
+            <strong>Error!</strong> Wrong Information / Password.
+        </p>
+        <p>Password</p>
+        <p><input id ='password-field' type="password" name="password" /></p>
+        <p id='password-error' class = "alert alert-danger" style="display:none">
+            <strong>Error!</strong> Wrong Information / Password.
+        </p>
+        <p><input id='submit' class="btn btn-outline-primary" type="submit" value="Register" /></p>
+    </form>
+</div>
+
+<script src="{{ url_for('static',filename = 'js/register.js')}}"></script>
+
+{% endblock %}

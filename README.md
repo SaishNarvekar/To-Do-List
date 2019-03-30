@@ -11,12 +11,8 @@ Release : 0.0.1v
 - [❌] Private List
 - [❌] User Management/Profile
 
-### Things To Do
-
-- [❌] Dockerize app
-
 ### How To Install:
 
 #### Requirement
-1. Python (3.6+)
+1. Python (3.7+)
 2. MySql Database
